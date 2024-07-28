@@ -1,39 +1,37 @@
 "use client";
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface ThemeContextType {
   mode: string;
-  toggleTheme: (mode: string) => void;
+  setMode: (mode: string) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState("");
 
-  const toggleTheme = useCallback(() => {
-    setMode((prevMode) => {
-      const newMode = prevMode === "dark" ? "light" : "dark";
-      document.documentElement.classList.remove("light", "dark");
-      document.documentElement.classList.add(newMode);
-      return newMode;
-    });
-  }, []);
+  const handleThemeChange = () => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      setMode("dark");
+      document.documentElement.classList.add("dark");
+    } else {
+      setMode("light");
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   useEffect(() => {
-    // Initialize theme on mount
-    document.documentElement.classList.add(mode);
+    handleThemeChange();
   }, [mode]);
 
   return (
-    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+    <ThemeContext.Provider value={{ mode, setMode }}>
       {children}
     </ThemeContext.Provider>
   );

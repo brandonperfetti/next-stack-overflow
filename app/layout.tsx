@@ -1,9 +1,11 @@
-import { ThemeProvider } from "@/context/ThemeProvider";
-import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
+import React from "react";
 // eslint-disable-next-line camelcase
 import { Inter, Space_Grotesk } from "next/font/google";
-import React from "react";
+
+import type { Metadata } from "next";
+
+import { ThemeProvider } from "@/context/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "DevFlow",
   description:
-    "DevFlow is a platform for developers to share their knowledge and learn from others.",
+    "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
@@ -43,13 +45,7 @@ export default function RootLayout({
             },
           }}
         >
-          <ThemeProvider>
-            <SignedOut>{/* <SignInButton /> */}</SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
       </body>
     </html>
