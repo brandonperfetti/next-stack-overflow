@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { createQuestion } from "@/lib/actions/question.action";
 import { QuestionsSchema } from "@/lib/validations";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
@@ -38,12 +39,13 @@ const Question = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try {
       // make an async call to your API to reate a question
       // contain all form data
       // navigate to home page
+      await createQuestion({});
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -116,7 +118,7 @@ const Question = () => {
             <FormItem className="flex w-full flex-col gap-3">
               <FormLabel className="paragraph-semibold text-dark400_light800">
                 Detailed explanation of your problem
-                <span className="text-primary-500">*</span>
+                <span className="text-primary-500"> *</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Editor
@@ -125,6 +127,10 @@ const Question = () => {
                     // @ts-ignore
                     // Required to access the editor instance
                     editorRef.current = editor;
+                  }}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => {
+                    field.onChange(content);
                   }}
                   initialValue=""
                   init={{
@@ -157,7 +163,7 @@ const Question = () => {
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
                 Introduce the problem and expand on what you put in the title.
-                Minimum 20 characters.
+                Minimum 100 characters.
               </FormDescription>
               <FormMessage className="text-red-500" />
             </FormItem>
