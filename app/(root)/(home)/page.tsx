@@ -1,57 +1,15 @@
-import QuestionCard, { QuestionProps } from "@/components/cards/QuestionCard";
+import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/Home/HomeFilters";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const questions: QuestionProps[] = [
-  {
-    _id: "q1",
-    title: "How to implement authentication in Node.js?",
-    tags: [
-      { _id: "t1", name: "Node.js" },
-      { _id: "t2", name: "Authentication" },
-    ],
-    author: {
-      _id: "u1",
-      name: "Alice Johnson",
-      picture: "https://example.com/alice.jpg",
-    },
-    upvotes: 42,
-    views: 1587,
-    answers: [
-      { id: "a1", content: "Use Passport.js for easy integration" },
-      { id: "a2", content: "Implement JWT for stateless authentication" },
-    ],
-    createdAt: new Date("2024-03-15T09:23:14.000Z"),
-  },
-  {
-    _id: "q2",
-    title: "Best practices for React state management in 2024?",
-    tags: [
-      { _id: "t3", name: "React" },
-      { _id: "t4", name: "State Management" },
-    ],
-    author: {
-      _id: "u2",
-      name: "Bob Smith",
-      picture: "https://example.com/bob.jpg",
-    },
-    upvotes: 78,
-    views: 3254,
-    answers: [
-      { id: "a3", content: "Use React Query for server state" },
-      { id: "a4", content: "Zustand is great for simple global state" },
-      { id: "a5", content: "Consider Jotai for atomic state management" },
-    ],
-    createdAt: new Date("2024-07-02T14:45:30.000Z"),
-  },
-];
-
-const Home = () => {
+const Home = async () => {
+  const result = await getQuestions({});
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -78,8 +36,8 @@ const Home = () => {
       </div>
       <HomeFilters />
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
