@@ -7,7 +7,6 @@ import { Webhook } from "svix";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
-  // TODO: Add your webhook secret to .env.local
   const WEBHOOK_SECRET = process.env.NEXT_CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
@@ -56,6 +55,7 @@ export async function POST(req: Request) {
   // For this guide, you simply log the payload to the console
   // const { id } = evt.data;
   const eventType = evt.type;
+  console.log({ eventType });
   // console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
   console.log("Webhook body:", body);
 
