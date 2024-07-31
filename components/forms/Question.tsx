@@ -20,13 +20,21 @@ import { Input } from "@/components/ui/input";
 import { createQuestion } from "@/lib/actions/question.action";
 import { QuestionsSchema } from "@/lib/validations";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 
 const type: any = "create";
 
-const Question = () => {
+interface Props {
+  mongoUserId: string;
+}
+
+const Question = ({ mongoUserId }: Props) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const router = useRouter();
+  // const pathname = usePathname();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
@@ -45,7 +53,14 @@ const Question = () => {
       // make an async call to your API to reate a question
       // contain all form data
       // navigate to home page
-      await createQuestion({});
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+      });
+      // Navigate to the home page
+      router.push("/");
     } catch (error) {
     } finally {
       setIsSubmitting(false);
