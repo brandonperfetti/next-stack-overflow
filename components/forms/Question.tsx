@@ -1,12 +1,4 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Editor } from "@tinymce/tinymce-react";
-import React, { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,11 +9,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/context/ThemeProvider";
 import { createQuestion } from "@/lib/actions/question.action";
 import { QuestionsSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 const type: any = "create";
 
@@ -30,9 +29,9 @@ interface Props {
 }
 
 const Question = ({ mongoUserId }: Props) => {
+  const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const router = useRouter();
   const pathname = usePathname();
 
@@ -49,9 +48,11 @@ const Question = ({ mongoUserId }: Props) => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
+
     try {
-      // make an async call to your API to create a question
+      // make an async call to your API -> create a question
       // contain all form data
+
       await createQuestion({
         title: values.title,
         content: values.explanation,
@@ -59,13 +60,13 @@ const Question = ({ mongoUserId }: Props) => {
         author: JSON.parse(mongoUserId),
         path: pathname,
       });
-      // Navigate to the home page
+
+      // navigate to home page
       router.push("/");
     } catch (error) {
     } finally {
       setIsSubmitting(false);
     }
-    // console.log(values);
   }
 
   const handleInputKeyDown = (
@@ -77,13 +78,15 @@ const Question = ({ mongoUserId }: Props) => {
 
       const tagInput = e.target as HTMLInputElement;
       const tagValue = tagInput.value.trim();
+
       if (tagValue !== "") {
         if (tagValue.length > 15) {
-          form.setError("tags", {
+          return form.setError("tags", {
             type: "required",
-            message: "Tag must be less than 15 characters",
+            message: "Tag must be less than 15 characters.",
           });
         }
+
         if (!field.value.includes(tagValue as never)) {
           form.setValue("tags", [...field.value, tagValue]);
           tagInput.value = "";
@@ -94,10 +97,13 @@ const Question = ({ mongoUserId }: Props) => {
       }
     }
   };
+
   const handleTagRemove = (tag: string, field: any) => {
-    const newtags = field.value.filter((t: string) => t !== tag);
-    form.setValue("tags", newtags);
+    const newTags = field.value.filter((t: string) => t !== tag);
+
+    form.setValue("tags", newTags);
   };
+
   return (
     <Form {...form}>
       <form
@@ -120,7 +126,7 @@ const Question = ({ mongoUserId }: Props) => {
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
                 Be specific and imagine you&apos;re asking a question to another
-                person
+                person.
               </FormDescription>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -132,53 +138,52 @@ const Question = ({ mongoUserId }: Props) => {
           render={({ field }) => (
             <FormItem className="flex w-full flex-col gap-3">
               <FormLabel className="paragraph-semibold text-dark400_light800">
-                Detailed explanation of your problem
-                <span className="text-primary-500"> *</span>
+                Detailed explanation of your problem{" "}
+                <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Editor
                   apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                  onInit={(_evt, editor) => {
+                  onInit={(evt, editor) => {
                     // @ts-ignore
-                    // Required to access the editor instance
                     editorRef.current = editor;
                   }}
                   onBlur={field.onBlur}
-                  onEditorChange={(content) => {
-                    field.onChange(content);
-                  }}
+                  onEditorChange={(content) => field.onChange(content)}
                   initialValue=""
                   init={{
                     height: 350,
                     menubar: false,
                     plugins: [
                       "advlist",
-                      "anchor",
                       "autolink",
+                      "lists",
+                      "link",
+                      "image",
                       "charmap",
+                      "preview",
+                      "anchor",
+                      "searchreplace",
+                      "visualblocks",
                       "codesample",
                       "fullscreen",
-                      "image",
                       "insertdatetime",
-                      "link",
-                      "lists",
                       "media",
-                      "preview",
-                      "searchreplace",
                       "table",
-                      "visualblocks",
                     ],
                     toolbar:
-                      "undo redo | blocks | " +
-                      "codesample | bold italic forecolor | alignleft aligncenter " +
+                      "undo redo | " +
+                      "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist",
                     content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
                 Introduce the problem and expand on what you put in the title.
-                Minimum 100 characters.
+                Minimum 20 characters.
               </FormDescription>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -199,18 +204,19 @@ const Question = ({ mongoUserId }: Props) => {
                     placeholder="Add tags..."
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                   />
+
                   {field.value.length > 0 && (
                     <div className="flex-start mt-2.5 gap-2.5">
-                      {field.value.map((tag) => (
+                      {field.value.map((tag: any) => (
                         <Badge
                           key={tag}
-                          className="subtle-medium background-light800_dark300 text-dark400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                          className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                           onClick={() => handleTagRemove(tag, field)}
                         >
                           {tag}
                           <Image
                             src="/assets/icons/close.svg"
-                            alt="Close Icon"
+                            alt="Close icon"
                             width={12}
                             height={12}
                             className="cursor-pointer object-contain invert-0 dark:invert"
@@ -222,8 +228,8 @@ const Question = ({ mongoUserId }: Props) => {
                 </>
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
-                Add up to 5 tags to describe what your question is about. Start
-                typing to see suggestions.
+                Add up to 3 tags to describe what your question is about. You
+                need to press enter to add a tag.
               </FormDescription>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -235,7 +241,7 @@ const Question = ({ mongoUserId }: Props) => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <>{type === "edit" ? "Editing..." : "Posting"}</>
+            <>{type === "edit" ? "Editing..." : "Posting..."}</>
           ) : (
             <>{type === "edit" ? "Edit Question" : "Ask a Question"}</>
           )}
