@@ -11,7 +11,7 @@ import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
-const Page = async ({ params }: any) => {
+const QuestionPage = async ({ params }: any) => {
   const { userId: clerkId } = auth();
 
   let mongoUser;
@@ -111,4 +111,4 @@ const Page = async ({ params }: any) => {
   );
 };
 
-export default Page;
+export default QuestionPage;
