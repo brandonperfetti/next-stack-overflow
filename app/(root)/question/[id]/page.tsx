@@ -1,6 +1,7 @@
 import Answer from "@/components/forms/Answer";
+import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
-import ParseHTML from "@/components/shared/parseHTML";
+import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
@@ -17,6 +18,7 @@ const QuestionPage = async ({ params }: any) => {
   if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
   }
+
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -76,6 +78,12 @@ const QuestionPage = async ({ params }: any) => {
           />
         ))}
       </div>
+
+      <AllAnswers
+        questionId={result._id}
+        userId={JSON.stringify(mongoUser._id)}
+        totalAnswers={result.answers.length}
+      />
 
       <Answer
         question={result.content}
