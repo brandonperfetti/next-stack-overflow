@@ -3,7 +3,7 @@
 import { formatAndDivideNumber } from "@/lib/utils";
 import Image from "next/image";
 
-interface Props {
+interface VotesProps {
   type: string;
   itemId: string;
   userId: string;
@@ -23,7 +23,7 @@ const Votes = ({
   downvotes,
   hasdownVoted,
   hasSaved,
-}: Props) => {
+}: VotesProps) => {
   return (
     <div className="flex gap-5">
       <div className="flex-center gap-2.5">
