@@ -8,7 +8,7 @@ import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const Home = async () => {
+const HomePage = async () => {
   const result = await getQuestions({});
   return (
     <>
@@ -63,4 +63,4 @@ const Home = async () => {
   );
 };
 
-export default Home;
+export default HomePage;
