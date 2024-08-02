@@ -5,7 +5,7 @@ import EditDeleteAction from "../shared/EditDeleteAction";
 import Metric from "../shared/Metric";
 import RenderTag from "../shared/RenderTag";
 
-interface QuestionCardProps {
+export interface QuestionCardProps {
   clerkId?: string | null;
   _id: string;
   title: string;

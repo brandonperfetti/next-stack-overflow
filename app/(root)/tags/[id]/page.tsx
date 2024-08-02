@@ -1,4 +1,4 @@
-import QuestionCard, { QuestionProps } from "@/components/cards/QuestionCard";
+import QuestionCard, { QuestionCardProps } from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
@@ -27,7 +27,7 @@ const TagPage = async ({ params, searchParams }: URLProps) => {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {result.questions.length > 0 ? (
-          result.questions.map((question: QuestionProps) => (
+          result.questions.map((question: QuestionCardProps) => (
             <QuestionCard
               key={question._id}
               _id={question._id}

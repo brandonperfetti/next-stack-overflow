@@ -1,4 +1,4 @@
-import QuestionCard, { QuestionProps } from "@/components/cards/QuestionCard";
+import QuestionCard, { QuestionCardProps } from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
@@ -36,7 +36,7 @@ export default async function CollectionPage() {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {result.questions.length > 0 ? (
-          result.questions.map((question: QuestionProps) => (
+          result.questions.map((question: QuestionCardProps) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
