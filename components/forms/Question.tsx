@@ -22,7 +22,7 @@ import * as z from "zod";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-interface Props {
+interface QuestionProps {
   type?: string;
   mongoUserId: string;
   questionDetails?: string;
@@ -35,7 +35,7 @@ interface QuestionDetails {
   tags: { name: string }[];
 }
 
-const Question = ({ type, mongoUserId, questionDetails }: Props) => {
+const Question = ({ type, mongoUserId, questionDetails }: QuestionProps) => {
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);

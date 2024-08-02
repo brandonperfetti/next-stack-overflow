@@ -5,7 +5,7 @@ import { getTopInteractedTags } from "@/lib/actions/tag.action";
 import RenderTag from "../shared/RenderTag";
 import { Badge } from "../ui/badge";
 
-interface Props {
+interface UserCardProps {
   user: {
     _id: string;
     clerkId: string;
@@ -15,7 +15,7 @@ interface Props {
   };
 }
 
-const UserCard = async ({ user }: Props) => {
+const UserCard = async ({ user }: UserCardProps) => {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
 
   return (

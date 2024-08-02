@@ -26,11 +26,11 @@ import "prismjs/components/prism-typescript";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 
-interface Props {
+interface ParseHTMLProps {
   data: string;
 }
 
-const ParseHTML = ({ data }: Props) => {
+const ParseHTML = ({ data }: ParseHTMLProps) => {
   useEffect(() => {
     Prism.highlightAll();
   }, []);

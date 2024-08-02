@@ -7,7 +7,7 @@ import Filter from "./Filter";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
 
-interface Props {
+interface AllAnswersProps {
   questionId: string;
   userId: string;
   totalAnswers: number;
@@ -21,7 +21,7 @@ const AllAnswers = async ({
   totalAnswers,
   page,
   filter,
-}: Props) => {
+}: AllAnswersProps) => {
   const result = await getAnswers({
     questionId,
   });
