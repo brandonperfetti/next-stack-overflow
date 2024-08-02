@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "@/context/ThemeProvider";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { QuestionsSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
@@ -22,26 +22,46 @@ import * as z from "zod";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-const type: any = "create";
-
 interface Props {
+  type?: string;
   mongoUserId: string;
+  questionDetails?: string;
 }
 
-const Question = ({ mongoUserId }: Props) => {
+interface QuestionDetails {
+  _id?: string;
+  title: string;
+  content: string;
+  tags: { name: string }[];
+}
+
+const Question = ({ type, mongoUserId, questionDetails }: Props) => {
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  let parsedQuestionDetails: QuestionDetails = { title: "", content: "", tags: [] };
+
+  let groupedTags: string[] = [];
+
+  try {
+    if (questionDetails && questionDetails.trim() !== "") {
+      parsedQuestionDetails = JSON.parse(questionDetails) as QuestionDetails;
+      groupedTags = parsedQuestionDetails.tags?.map((tag) => tag.name) || [];
+    }
+  } catch (error) {
+    console.error("Error parsing questionDetails:", error);
+  }
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetails.title || "",
+      explanation: parsedQuestionDetails.content || "",
+      tags: groupedTags || [],
     },
   });
 
@@ -52,17 +72,27 @@ const Question = ({ mongoUserId }: Props) => {
     try {
       // make an async call to your API -> create a question
       // contain all form data
+      if (type === "Edit" && parsedQuestionDetails._id) {
+        await editQuestion({
+          questionId: parsedQuestionDetails._id,
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          path: pathname,
+        });
+        router.push(`/question/${parsedQuestionDetails._id}`);
+      } else {
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
 
-      await createQuestion({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
-
-      // navigate to home page
-      router.push("/");
+        // navigate to home page
+        router.push("/");
+      }
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -150,7 +180,7 @@ const Question = ({ mongoUserId }: Props) => {
                   }}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
-                  initialValue=""
+                  initialValue={parsedQuestionDetails.content || ""}
                   init={{
                     height: 350,
                     menubar: false,
@@ -241,9 +271,9 @@ const Question = ({ mongoUserId }: Props) => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <>{type === "edit" ? "Editing..." : "Posting..."}</>
+            <>{type === "Edit" ? "Editing..." : "Posting..."}</>
           ) : (
-            <>{type === "edit" ? "Edit Question" : "Ask a Question"}</>
+            <>{type === "Edit" ? "Edit Question" : "Ask a Question"}</>
           )}
         </Button>
       </form>
