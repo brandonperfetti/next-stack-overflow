@@ -214,7 +214,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
     const userQuestions = await Question.find({ author: userId })
       .sort({ views: -1, upvotes: -1 })
       .populate("tags", "_id name")
-      .populate("author", "_id name picture");
+      .populate("author", "_id clerkId name picture");
     return { totalQuestions, questions: userQuestions };
   } catch (error) {
     console.log(error);

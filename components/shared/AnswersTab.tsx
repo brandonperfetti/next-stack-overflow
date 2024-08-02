@@ -18,7 +18,7 @@ const AnswersTab = async ({
       {result.answers.map((answer) => (
         <AnswerCard
           key={answer._id}
-          clerkId={clerkId || ""}
+          clerkId={clerkId}
           _id={answer._id}
           question={answer.question}
           author={answer.author}

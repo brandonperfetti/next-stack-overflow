@@ -7,19 +7,19 @@ interface QuestionsTabProps extends SearchParamsProps {
   clerkId: string | null;
 }
 
-const QuestionsTab = async ({
-  searchParams,
-  userId,
-  clerkId,
-}: QuestionsTabProps) => {
-  const result = await getUserQuestions({ userId, page: 1 });
+const QuestionsTab = async ({ searchParams, userId, clerkId }: QuestionsTabProps) => {
+  const result = await getUserQuestions({
+    userId,
+    page: 1,
+  });
+
   return (
     <>
       {result.questions.map((question) => (
         <QuestionCard
           key={question._id}
           _id={question._id}
-          clerkId={clerkId || ""}
+          clerkId={clerkId}
           title={question.title}
           tags={question.tags}
           author={question.author}
