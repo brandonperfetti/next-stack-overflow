@@ -5,7 +5,7 @@ import Interaction from "@/database/interaction.model";
 import Question from "@/database/question.model";
 import Tag, { ITag } from "@/database/tag.model";
 import User from "@/database/user.model";
-import { ObjectId } from "mongoose";
+import { FilterQuery, ObjectId } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -20,8 +20,18 @@ import {
 export async function getQuestions(params: GetQuestionsParams) {
   try {
     connectToDatabase();
+    const { searchQuery } = params;
 
-    const questions = await Question.find({})
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const questions = await Question.find(query)
       .populate({
         path: "tags",
         model: Tag,
@@ -186,8 +196,6 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     console.log(error);
   }
 }
-
-
 
 export async function editQuestion({
   content,
