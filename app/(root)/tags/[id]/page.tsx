@@ -1,4 +1,6 @@
-import QuestionCard, { QuestionCardProps } from "@/components/cards/QuestionCard";
+import QuestionCard, {
+  QuestionCardProps,
+} from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
@@ -10,7 +12,7 @@ const TagPage = async ({ params, searchParams }: URLProps) => {
     page: 1,
     searchQuery: searchParams.q,
   });
-  console.log({ result });
+  // console.log({ result });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">{result.tagTitle}</h1>
