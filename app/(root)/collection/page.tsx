@@ -1,4 +1,6 @@
-import QuestionCard, { QuestionCardProps } from "@/components/cards/QuestionCard";
+import QuestionCard, {
+  QuestionCardProps,
+} from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
@@ -7,16 +9,17 @@ import { getSavedQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
 
-export default async function CollectionPage({ searchParams }: SearchParamsProps) {
+export default async function CollectionPage({
+  searchParams,
+}: SearchParamsProps) {
   const { userId } = auth();
 
-  if(!userId) return null;
+  if (!userId) return null;
 
   const result = await getSavedQuestions({
     clerkId: userId,
-    searchQuery: searchParams.q
+    searchQuery: searchParams.q,
   });
-
 
   return (
     <>
@@ -24,7 +27,7 @@ export default async function CollectionPage({ searchParams }: SearchParamsProps
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
-          route="/"
+          route={`/collection`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"
