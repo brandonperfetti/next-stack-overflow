@@ -6,6 +6,7 @@ import Link from "next/link";
 import Filter from "./Filter";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
+import Pagination from "./Pagination";
 
 interface AllAnswersProps {
   questionId: string;
@@ -79,6 +80,12 @@ const AllAnswers = async ({
             <ParseHTML data={answer.content} />
           </article>
         ))}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={page ? +page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </div>
   );
