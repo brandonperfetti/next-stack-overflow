@@ -42,7 +42,11 @@ const Question = ({ type, mongoUserId, questionDetails }: QuestionProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  let parsedQuestionDetails: QuestionDetails = { title: "", content: "", tags: [] };
+  let parsedQuestionDetails: QuestionDetails = {
+    title: "",
+    content: "",
+    tags: [],
+  };
 
   let groupedTags: string[] = [];
 
@@ -205,7 +209,7 @@ const Question = ({ type, mongoUserId, questionDetails }: QuestionProps) => {
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist",
-                    content_style: "body { font-family:Inter; font-size:16px }",
+                    content_style: "body { font-family:Inter; font-size:14px }",
                     skin: mode === "dark" ? "oxide-dark" : "oxide",
                     content_css: mode === "dark" ? "dark" : "light",
                   }}

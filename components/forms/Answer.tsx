@@ -60,23 +60,26 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   };
 
   const generateAIAnswer = async () => {
-    if(!authorId) return;
+    if (!authorId) return;
 
     setIsSubmittingAI(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`, { 
-        method: 'POST',
-        body: JSON.stringify({ question })
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question }),
+        },
+      );
 
       const aiAnswer = await response.json();
 
       // Convert plain text to HTML format
 
-      const formattedAnswer = aiAnswer.reply.replace(/\n/g, '<br />');
+      const formattedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
 
-      if(editorRef.current) {
+      if (editorRef.current) {
         const editor = editorRef.current as any;
         editor.setContent(formattedAnswer);
       }
@@ -87,7 +90,7 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
     } finally {
       setIsSubmittingAI(false);
     }
-  }
+  };
 
   return (
     <div>
@@ -100,14 +103,20 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
           onClick={generateAIAnswer}
         >
-          <Image
-            src="/assets/icons/stars.svg"
-            alt="star"
-            width={12}
-            height={12}
-            className="object-contain"
-          />
-          Generate AI Answer
+          {isSubmittingAI ? (
+            <>Generating...</>
+          ) : (
+            <>
+              <Image
+                src="/assets/icons/stars.svg"
+                alt="star"
+                width={12}
+                height={12}
+                className="object-contain"
+              />
+              Generate AI Answer
+            </>
+          )}
         </Button>
       </div>
 
@@ -155,7 +164,7 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
                         "codesample | bold italic forecolor | alignleft aligncenter |" +
                         "alignright alignjustify | bullist numlist",
                       content_style:
-                        "body { font-family:Inter; font-size:16px }",
+                        "body { font-family:Inter; font-size:14px }",
                       skin: mode === "dark" ? "oxide-dark" : "oxide",
                       content_css: mode === "dark" ? "dark" : "light",
                     }}
