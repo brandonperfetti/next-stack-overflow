@@ -18,6 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
+import { toast } from "../ui/use-toast";
 
 interface AnswerProps {
   question: string;
@@ -52,6 +53,10 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
         const editor = editorRef.current as any;
         editor.setContent("");
       }
+      return toast({
+        title: `Your Answer has been submitted`,
+        variant: "default",
+      });
     } catch (error) {
       console.log(error);
     } finally {

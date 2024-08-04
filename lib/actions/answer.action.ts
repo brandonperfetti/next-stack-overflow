@@ -14,9 +14,8 @@ import {
 } from "./shared.types";
 
 export async function createAnswer(params: CreateAnswerParams) {
-  connectToDatabase();
-
   try {
+    connectToDatabase();
     const { content, author, question, path } = params;
 
     const newAnswer = await Answer.create({

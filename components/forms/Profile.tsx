@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Textarea } from "../ui/textarea";
+import { toast } from "../ui/use-toast";
 
 interface ProfileProps {
   clerkId: string;
@@ -30,7 +31,6 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
@@ -42,13 +42,9 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof ProfileSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     setIsSubmitting(true);
     try {
-      // updateUser
       await updateUser({
         clerkId,
         updateData: {
@@ -62,12 +58,15 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
       });
 
       router.back();
+      return toast({
+        title: `Profile has been updated`,
+        variant: "default",
+      });
     } catch (error) {
       console.log(error);
     } finally {
       setIsSubmitting(false);
     }
-    console.log(values);
   }
   return (
     <Form {...form}>
