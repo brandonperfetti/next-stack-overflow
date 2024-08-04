@@ -28,6 +28,7 @@ interface AnswerProps {
 const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof AnswerSchema>>({
@@ -58,6 +59,29 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
     }
   };
 
+  const generateAIAnswer = async () => {
+    if (!authorId) return;
+
+    setIsSubmittingAI(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question }),
+          // headers: { "Content-Type": "application/json" },
+        },
+      );
+      const aiAnswer = await response.json();
+
+      alert(aiAnswer.reply);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmittingAI(false);
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -67,7 +91,7 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
 
         <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-          onClick={() => {}}
+          onClick={generateAIAnswer}
         >
           <Image
             src="/assets/icons/stars.svg"
@@ -76,7 +100,7 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
             height={12}
             className="object-contain"
           />
-          Generate an AI Answer
+          Generate AI Answer
         </Button>
       </div>
 
