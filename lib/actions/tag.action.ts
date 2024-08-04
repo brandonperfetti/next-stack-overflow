@@ -92,8 +92,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     // eslint-disable-next-line no-unused-vars
     const { tagId, page = 1, pageSize = 10, searchQuery } = params;
 
-     // Calculcate the number of posts to skip based on the page number and page size
-     const skipAmount = (page - 1) * pageSize;
+    // Calculcate the number of posts to skip based on the page number and page size
+    const skipAmount = (page - 1) * pageSize;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
