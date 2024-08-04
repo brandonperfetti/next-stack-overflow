@@ -119,15 +119,20 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
       throw new Error("Answer not found");
     }
 
-    // Increment user's reputation
-    await User.findByIdAndUpdate(userId, {
-      $inc: { reputation: hasupVoted ? -2 : 2 },
-    });
+    const isOwnAnswer = answer.author.toString() === userId;
 
-    // Increment author's reputation
-    await User.findByIdAndUpdate(answer.author, {
-      $inc: { reputation: hasupVoted ? -10 : 10 },
-    });
+    // Only increment reputation if it's not the user's own question
+    if (!isOwnAnswer) {
+      // Increment user's reputation
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasupVoted ? -2 : 2 },
+      });
+
+      // Increment author's reputation
+      await User.findByIdAndUpdate(answer.author, {
+        $inc: { reputation: hasupVoted ? -10 : 10 },
+      });
+    }
 
     revalidatePath(path);
   } catch (error) {
@@ -163,15 +168,20 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
       throw new Error("Answer not found");
     }
 
-    // Increment user's reputation
-    await User.findByIdAndUpdate(userId, {
-      $inc: { reputation: hasdownVoted ? -2 : 2 },
-    });
+    const isOwnAnswer = answer.author.toString() === userId;
 
-    // Increment author's reputation
-    await User.findByIdAndUpdate(answer.author, {
-      $inc: { reputation: hasdownVoted ? -10 : 10 },
-    });
+    // Only increment reputation if it's not the user's own question
+    if (!isOwnAnswer) {
+      // Increment user's reputation
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasdownVoted ? -2 : 2 },
+      });
+
+      // Increment author's reputation
+      await User.findByIdAndUpdate(answer.author, {
+        $inc: { reputation: hasdownVoted ? -10 : 10 },
+      });
+    }
 
     revalidatePath(path);
   } catch (error) {
@@ -191,6 +201,10 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
     if (!answer) {
       throw new Error("Answer not found");
     }
+
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: -10 },
+    });
 
     await answer.deleteOne({ _id: answerId });
     await Question.updateMany(

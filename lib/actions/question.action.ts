@@ -164,11 +164,20 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
       throw new Error("Question not found");
     }
 
-    // Increment author's reputation by +1/-1 for upvoting/revoking an upvote to a question
-    await User.findByIdAndUpdate(userId, {$inc: {reputation: hasupVoted ? -1 : 1}});
+    const isOwnQuestion = question.author.toString() === userId;
 
-    // Increment author's reputation by +10/-10 for recieving/revoking an upvote to the question
-    await User.findByIdAndUpdate(question.author, {$inc: {reputation: hasupVoted ? -10 : 10}});
+    // Only increment reputation if it's not the user's own question
+    if (!isOwnQuestion) {
+      // Increment author's reputation by +1/-1 for upvoting/revoking an upvote to a question
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasupVoted ? -1 : 1 },
+      });
+
+      // Increment author's reputation by +10/-10 for recieving/revoking an upvote to the question
+      await User.findByIdAndUpdate(question.author, {
+        $inc: { reputation: hasupVoted ? -10 : 10 },
+      });
+    }
 
     revalidatePath(path);
   } catch (error) {
@@ -204,15 +213,20 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
       throw new Error("Question not found");
     }
 
-    // Increment user's reputation
-    await User.findByIdAndUpdate(userId, {
-      $inc: { reputation: hasdownVoted ? -2 : 2 },
-    });
+    const isOwnQuestion = question.author.toString() === userId;
 
-    // Increment author's reputation
-    await User.findByIdAndUpdate(question.author, {
-      $inc: { reputation: hasdownVoted ? -10 : 10 },
-    });
+    // Only increment reputation if it's not the user's own question
+    if (!isOwnQuestion) {
+      // Increment user's reputation
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasdownVoted ? -2 : 2 },
+      });
+
+      // Increment author's reputation
+      await User.findByIdAndUpdate(question.author, {
+        $inc: { reputation: hasdownVoted ? -10 : 10 },
+      });
+    }
 
     revalidatePath(path);
   } catch (error) {
@@ -226,6 +240,16 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     connectToDatabase();
 
     const { questionId, path } = params;
+
+    const question = await Question.findById(questionId);
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: -5 },
+    });
 
     await Question.deleteOne({ _id: questionId });
     await Answer.deleteMany({ question: questionId });
