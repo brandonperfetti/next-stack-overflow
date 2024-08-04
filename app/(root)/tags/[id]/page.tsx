@@ -7,6 +7,25 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
 
+import type { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const result = await getQuestionsByTagId({
+    tagId: params.id,
+  });
+
+  return {
+    title: `${result.tagTitle} | DevFlow`,
+  };
+}
+
 const TagPage = async ({ params, searchParams }: URLProps) => {
   const result = await getQuestionsByTagId({
     tagId: params.id,
@@ -53,7 +72,10 @@ const TagPage = async ({ params, searchParams }: URLProps) => {
         )}
       </div>
       <div className="mt-10">
-        <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result.isNext} />
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );

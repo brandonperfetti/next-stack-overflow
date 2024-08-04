@@ -5,7 +5,12 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
 import { SearchParamsProps } from "@/types";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Tags | DevFlow",
+};
 
 const TagsPage = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllTags({
@@ -67,7 +72,10 @@ const TagsPage = async ({ searchParams }: SearchParamsProps) => {
         )}
       </section>
       <div className="mt-10">
-        <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result.isNext} />
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );

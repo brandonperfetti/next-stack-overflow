@@ -1,7 +1,12 @@
 import Question from "@/components/forms/Question";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs/server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Ask a Question | DevFlow",
+};
 
 const AskQuestionPage = async () => {
   const { userId } = auth();

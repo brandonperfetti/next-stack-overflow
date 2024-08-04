@@ -13,6 +13,23 @@ import Stats from "@/components/shared/Stats";
 import { getJoinedDate } from "@/lib/utils";
 import { auth } from "@clerk/nextjs/server";
 
+import type { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const userInfo = await getUserInfo({ userId: params.id });
+
+  return {
+    title: `${userInfo.user.name} | DevFlow`,
+  };
+}
+
 const ProfilePage = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
   const userInfo = await getUserInfo({ userId: params.id });
@@ -55,7 +72,7 @@ const ProfilePage = async ({ params, searchParams }: URLProps) => {
 
               <ProfileLink
                 imgUrl="/assets/icons/calendar.svg"
-                title={'Joined ' + getJoinedDate(userInfo.user.joinedAt)}
+                title={"Joined " + getJoinedDate(userInfo.user.joinedAt)}
               />
             </div>
 
