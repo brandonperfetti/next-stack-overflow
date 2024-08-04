@@ -17,6 +17,7 @@ const HomePage = async ({ searchParams }: SearchParamsProps) => {
     page: searchParams.page ? +searchParams.page : 1,
   });
   // TODO: Fetch recommended questions
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -67,7 +68,10 @@ const HomePage = async ({ searchParams }: SearchParamsProps) => {
         )}
       </div>
       <div className="mt-10">
-        <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result.isNext} />
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );
