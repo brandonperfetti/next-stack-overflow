@@ -1,4 +1,5 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import Image from "next/image";
@@ -25,6 +26,7 @@ const LocalSearchbar = ({
   const searchParams = useSearchParams();
 
   const query = searchParams.get("q");
+
   const [search, setSearch] = useState(query || "");
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const LocalSearchbar = ({
 
         router.push(newUrl, { scroll: false });
       } else {
-        // console.log(route, pathname);
+        console.log(route, pathname);
         if (pathname === route) {
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
@@ -55,7 +57,7 @@ const LocalSearchbar = ({
 
   return (
     <div
-      className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-xl px-4 ${otherClasses}`}
+      className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
     >
       {iconPosition === "left" && (
         <Image
@@ -66,13 +68,15 @@ const LocalSearchbar = ({
           className="cursor-pointer"
         />
       )}
+
       <Input
         type="text"
         placeholder={placeholder}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
+        className="paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
       />
+
       {iconPosition === "right" && (
         <Image
           src={imgSrc}
