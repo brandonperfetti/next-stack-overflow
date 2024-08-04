@@ -1,9 +1,9 @@
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import Theme from "./Theme";
-import MobileNav from "./MobileNav";
 import GlobalSearch from "../search/GlobalSearch";
+import MobileNav from "./MobileNav";
+import Theme from "./Theme";
 
 const Navbar = () => {
   return (
@@ -16,7 +16,7 @@ const Navbar = () => {
           alt="DevFlow"
         />
         <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
-          Dev <span className="text-primary-500">Overflow</span>
+          Dev <span className="text-primary-500">Flow</span>
         </p>
       </Link>
       <GlobalSearch />
