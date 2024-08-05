@@ -165,4 +165,4 @@ export function processJobTitle(title: string | undefined | null): string {
   const processedTitle = validWords.join(" ");
 
   return processedTitle;
-}	
+}
