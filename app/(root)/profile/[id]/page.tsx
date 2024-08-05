@@ -126,7 +126,7 @@ const ProfilePage = async ({ params, searchParams }: URLProps) => {
                   clerkId={clerkId}
                 />
               ) : (
-                <div className="mx-auto p-9 sm:px-11">No Questions yet</div>
+                <div className="mx-auto p-9 sm:px-11">No Questions</div>
               )}
             </TabsContent>
             <TabsContent value="answers" className="flex w-full flex-col gap-6">
@@ -137,7 +137,7 @@ const ProfilePage = async ({ params, searchParams }: URLProps) => {
                   clerkId={clerkId}
                 />
               ) : (
-                <div className="mx-auto p-9 sm:px-11">No Answers yet</div>
+                <div className="mx-auto p-9 sm:px-11">No Answers</div>
               )}
             </TabsContent>
           </Tabs>
