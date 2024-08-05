@@ -105,33 +105,43 @@ const ProfilePage = async ({ params, searchParams }: URLProps) => {
       />
 
       <div className="mt-10 flex gap-10">
-        <Tabs defaultValue="top-posts" className="flex-1">
-          <TabsList className="background-light800_dark400 min-h-[42px] p-1">
-            <TabsTrigger value="top-posts" className="tab">
-              Top Posts
-            </TabsTrigger>
-            <TabsTrigger value="answers" className="tab">
-              Answers
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent
-            value="top-posts"
-            className="mt-5 flex w-full flex-col gap-6"
-          >
-            <QuestionsTab
-              searchParams={searchParams}
-              userId={userInfo.user._id}
-              clerkId={clerkId}
-            />
-          </TabsContent>
-          <TabsContent value="answers" className="flex w-full flex-col gap-6">
-            <AnswersTab
-              searchParams={searchParams}
-              userId={userInfo.user._id}
-              clerkId={clerkId}
-            />
-          </TabsContent>
-        </Tabs>
+        {(userInfo.totalQuestions > 0 || userInfo.totalAnswers > 0) && (
+          <Tabs defaultValue="top-posts" className="flex-1">
+            <TabsList className="background-light800_dark400 min-h-[42px] p-1">
+              <TabsTrigger value="top-posts" className="tab">
+                Top Posts
+              </TabsTrigger>
+              <TabsTrigger value="answers" className="tab">
+                Answers
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="top-posts"
+              className="mt-5 flex w-full flex-col gap-6"
+            >
+              {userInfo.totalQuestions > 0 ? (
+                <QuestionsTab
+                  searchParams={searchParams}
+                  userId={userInfo.user._id}
+                  clerkId={clerkId}
+                />
+              ) : (
+                <div className="mx-auto p-9 sm:px-11">No Questions yet</div>
+              )}
+            </TabsContent>
+            <TabsContent value="answers" className="flex w-full flex-col gap-6">
+              {userInfo.totalAnswers > 0 ? (
+                <AnswersTab
+                  searchParams={searchParams}
+                  userId={userInfo.user._id}
+                  clerkId={clerkId}
+                />
+              ) : (
+                <div className="mx-auto p-9 sm:px-11">No Answers yet</div>
+              )}
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
     </>
   );
