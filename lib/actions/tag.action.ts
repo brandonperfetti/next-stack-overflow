@@ -11,23 +11,86 @@ import {
   GetTopInteractedTagsParams,
 } from "./shared.types";
 
+// export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
+//   try {
+//     connectToDatabase();
+
+//     const { userId } = params;
+
+//     const user = await User.findById(userId);
+
+//     if (!user) throw new Error("User not found");
+
+//     // Find interactions for the user and group by tags...
+//     // Interaction...
+
+//     return [
+//       { _id: "1", name: "tag" },
+//       { _id: "2", name: "tag2" },
+//     ];
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// }
+
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
     connectToDatabase();
 
-    const { userId } = params;
+    const { userId, limit = 3 } = params;
 
     const user = await User.findById(userId);
 
     if (!user) throw new Error("User not found");
 
-    // Find interactions for the user and group by tags...
-    // Interaction...
+    // Find interactions for the user and group by tags
+    const userInteractions = await Question.aggregate([
+      // Match questions where the user has interacted (authored, answered, or commented)
+      {
+        $match: {
+          $or: [
+            { author: user._id },
+            { answers: { $elemMatch: { author: user._id } } },
+            { comments: { $elemMatch: { author: user._id } } }
+          ]
+        }
+      },
+      // Unwind the tags array
+      { $unwind: "$tags" },
+      // Group by tags and count interactions
+      {
+        $group: {
+          _id: "$tags",
+          count: { $sum: 1 }
+        }
+      },
+      // Sort by interaction count in descending order
+      { $sort: { count: -1 } },
+      // Limit to the top N tags
+      { $limit: limit },
+      // Lookup to get tag details
+      {
+        $lookup: {
+          from: "tags",
+          localField: "_id",
+          foreignField: "_id",
+          as: "tagInfo"
+        }
+      },
+      // Unwind the tagInfo array
+      { $unwind: "$tagInfo" },
+      // Project the final shape of the data
+      {
+        $project: {
+          _id: "$tagInfo._id",
+          name: "$tagInfo.name",
+          count: 1
+        }
+      }
+    ]);
 
-    return [
-      { _id: "1", name: "tag" },
-      { _id: "2", name: "tag2" },
-    ];
+    return userInteractions;
   } catch (error) {
     console.log(error);
     throw error;
