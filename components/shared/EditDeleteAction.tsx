@@ -1,9 +1,21 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { deleteAnswer } from "@/lib/actions/answer.action";
 import { deleteQuestion } from "@/lib/actions/question.action";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 interface EditDeleteActionProps {
   type: string;
@@ -35,7 +47,7 @@ const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
   };
 
   return (
-    <div className="flex items-center justify-end gap-3 max-sm:w-full">
+    <div className="z-30 flex items-center justify-end gap-3 max-sm:w-full">
       {type === "Question" && (
         <Image
           src="/assets/icons/edit.svg"
@@ -46,15 +58,34 @@ const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
           onClick={handleEdit}
         />
       )}
-
-      <Image
-        src="/assets/icons/trash.svg"
-        alt="Delete"
-        width={14}
-        height={14}
-        className="cursor-pointer object-contain"
-        onClick={handleDelete}
-      />
+      <AlertDialog>
+        <AlertDialogTrigger>
+          <Image
+            src="/assets/icons/trash.svg"
+            alt="Delete"
+            width={14}
+            height={14}
+            className="cursor-pointer object-contain"
+          />
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your{" "}
+              {type === "Question" ? " question" : " answer"}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button variant="destructive" asChild>
+              <AlertDialogAction onClick={handleDelete}>
+                Delete
+              </AlertDialogAction>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
