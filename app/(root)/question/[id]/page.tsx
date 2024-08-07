@@ -105,11 +105,13 @@ const QuestionPage = async ({ params, searchParams }: URLProps) => {
         filter={searchParams?.filter}
       />
 
-      <Answer
-        question={result.content}
-        questionId={JSON.stringify(result._id)}
-        authorId={JSON.stringify(mongoUser?._id)}
-      />
+      {mongoUser && (
+        <Answer
+          question={result.content}
+          questionId={JSON.stringify(result._id)}
+          authorId={JSON.stringify(mongoUser?._id)}
+        />
+      )}
     </>
   );
 };
