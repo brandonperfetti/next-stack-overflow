@@ -27,7 +27,7 @@ const Navbar = () => {
             afterSwitchSessionUrl="/" // Redirect to home page after sign out
             appearance={{
               elements: {
-                avatarBox: "size-10",
+                avatarBox: "size-8",
               },
               variables: {
                 // TODO: Figure out why this color is not respected
