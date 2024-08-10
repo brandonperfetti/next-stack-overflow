@@ -52,9 +52,9 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
           $or: [
             { author: user._id },
             { answers: { $elemMatch: { author: user._id } } },
-            { comments: { $elemMatch: { author: user._id } } }
-          ]
-        }
+            { comments: { $elemMatch: { author: user._id } } },
+          ],
+        },
       },
       // Unwind the tags array
       { $unwind: "$tags" },
@@ -62,8 +62,8 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
       {
         $group: {
           _id: "$tags",
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       // Sort by interaction count in descending order
       { $sort: { count: -1 } },
@@ -75,8 +75,8 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
           from: "tags",
           localField: "_id",
           foreignField: "_id",
-          as: "tagInfo"
-        }
+          as: "tagInfo",
+        },
       },
       // Unwind the tagInfo array
       { $unwind: "$tagInfo" },
@@ -85,9 +85,9 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
         $project: {
           _id: "$tagInfo._id",
           name: "$tagInfo.name",
-          count: 1
-        }
-      }
+          count: 1,
+        },
+      },
     ]);
 
     return userInteractions;
@@ -101,7 +101,7 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 12 } = params;
 
     // Calculcate the number of posts to skip based on the page number and page size
     const skipAmount = (page - 1) * pageSize;

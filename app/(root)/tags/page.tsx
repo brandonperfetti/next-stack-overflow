@@ -38,7 +38,7 @@ const TagsPage = async ({ searchParams }: SearchParamsProps) => {
         />
       </div>
 
-      <section className="mt-12 flex flex-wrap gap-4">
+      <section className="mt-12 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
         {result.tags.length > 0 ? (
           result.tags.map((tag) => (
             <Link
@@ -46,9 +46,9 @@ const TagsPage = async ({ searchParams }: SearchParamsProps) => {
               key={tag._id}
               className="shadow-light100_darknone"
             >
-              <article className="background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-8 py-10 sm:w-[260px]">
-                <div className="background-light800_dark400 w-fit rounded-md px-5 py-1.5">
-                  <p className="paragraph-semibold text-dark300_light900">
+              <article className="light-border background-light900_dark300 flex flex-wrap items-center justify-evenly gap-4 rounded-md border p-6 shadow-light-300 dark:shadow-dark-200">
+                <div className="background-light800_dark400 w-full rounded-md px-5 py-1.5">
+                  <p className="paragraph-semibold text-dark300_light900 overflow-auto text-center">
                     {tag.name}
                   </p>
                 </div>
@@ -57,7 +57,7 @@ const TagsPage = async ({ searchParams }: SearchParamsProps) => {
                   <span className="body-semibold primary-text-gradient mr-2.5">
                     {tag.questions.length}+
                   </span>{" "}
-                  Questions
+                  {tag.questions.length > 1 ? <>Questions</> : <>Question</>}
                 </p>
               </article>
             </Link>
