@@ -18,6 +18,7 @@ interface VotesProps {
   type: string;
   itemId: string;
   userId: string;
+  authorId: string;
   upvotes: number;
   hasupVoted: boolean;
   downvotes: number;
@@ -29,6 +30,7 @@ const Votes = ({
   type,
   itemId,
   userId,
+  authorId,
   upvotes,
   hasupVoted,
   downvotes,
@@ -64,6 +66,22 @@ const Votes = ({
         variant: "destructive",
         description: "You need to be logged in to vote",
       });
+    }
+
+    if (userId === authorId) {
+      if (type === "Question") {
+        return toast({
+          title: "Oops!",
+          variant: "destructive",
+          description: "You can't vote on your own question",
+        });
+      } else if (type === "Answer") {
+        return toast({
+          title: "Oops!",
+          variant: "destructive",
+          description: "You can't vote on your own answer",
+        });
+      }
     }
 
     if (action === "upvote") {
