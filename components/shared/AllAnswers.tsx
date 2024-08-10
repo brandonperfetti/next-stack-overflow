@@ -34,7 +34,10 @@ const AllAnswers = async ({
       <div className="flex items-center justify-between">
         <h3 className="primary-text-gradient">{totalAnswers} Answers</h3>
 
-        <Filter filters={AnswerFilters} />
+        <Filter
+          filters={AnswerFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+        />
       </div>
 
       <div>
@@ -67,6 +70,7 @@ const AllAnswers = async ({
                   type="Answer"
                   itemId={JSON.stringify(answer._id)}
                   userId={JSON.stringify(userId)}
+                  authorId={JSON.stringify(answer.author._id)}
                   upvotes={answer.upvotes.length}
                   hasupVoted={answer.upvotes.includes(userId)}
                   downvotes={answer.downvotes.length}

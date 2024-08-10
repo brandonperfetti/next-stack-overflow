@@ -71,7 +71,7 @@ const HomePage = async ({ searchParams }: SearchParamsProps) => {
           containerClasses="hidden max-md:flex"
         />
       </div>
-      <HomeFilters />
+      <HomeFilters userId={userId} />
       <div className="mt-10 flex w-full flex-col gap-6">
         {result.questions.length > 0 ? (
           result.questions.map((question) => (
