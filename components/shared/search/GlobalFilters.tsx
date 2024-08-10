@@ -49,7 +49,7 @@ const GlobalFilters = () => {
               ${
                 active === item.value
                   ? "bg-primary-500 text-light-900"
-                  : "bg-light-700 text-dark-400 hover:text-primary-500 dark:bg-dark-500 dark:hover:text-primary-500"
+                  : "bg-light-700 text-dark-400 hover:text-primary-500 dark:bg-dark-500 dark:text-light-900 dark:hover:text-primary-500"
               }
             `}
             onClick={() => handleTypeClick(item.value)}
